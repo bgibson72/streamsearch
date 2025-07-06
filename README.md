@@ -10,7 +10,8 @@
 ## ✨ Features
 
 - 🔍 **Smart Show Search** - Browse curated content or search real-time data via TMDB API
-- 💰 **Budget Optimization** - Get recommendations that respect your budget constraints
+- �️ **Rich Thumbnails** - High-quality poster images from TMDB with elegant fallbacks
+- �💰 **Budget Optimization** - Get recommendations that respect your budget constraints
 - 📱 **Mobile PWA** - Install on your phone for native-like experience
 - 🎯 **Value Optimization** - Algorithm prioritizes maximum coverage with minimum services
 - 💾 **Persistent Cart** - Your selections are saved locally for 7 days
@@ -174,7 +175,7 @@ npm run start
 ### Environment Variables
 ```bash
 # Optional - for API features
-TMDB_API_KEY=your_api_key_here
+NEXT_PUBLIC_TMDB_API_KEY=your_api_key_here
 ```
 
 ### Deploy to Vercel
