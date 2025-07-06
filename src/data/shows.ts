@@ -15,7 +15,8 @@ export const shows: Show[] = [
     streamingServices: ['netflix'],
     popularity: 9,
     imdbRating: 8.7,
-    description: 'A group of kids uncover supernatural mysteries in their small town'
+    description: 'A group of kids uncover supernatural mysteries in their small town',
+    imageUrl: 'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg'
   },
   {
     id: 'the-crown',
@@ -26,7 +27,8 @@ export const shows: Show[] = [
     streamingServices: ['netflix'],
     popularity: 8,
     imdbRating: 8.6,
-    description: 'Chronicles the reign of Queen Elizabeth II'
+    description: 'Chronicles the reign of Queen Elizabeth II',
+    imageUrl: 'https://image.tmdb.org/t/p/w500/1M876KPjulVwppEpldhdc8V4o68.jpg'
   },
   
   // Disney+ Content
@@ -39,7 +41,8 @@ export const shows: Show[] = [
     streamingServices: ['disney-plus'],
     popularity: 9,
     imdbRating: 8.7,
-    description: 'A lone bounty hunter in the Star Wars universe'
+    description: 'A lone bounty hunter in the Star Wars universe',
+    imageUrl: 'https://image.tmdb.org/t/p/w500/sWgBv7LV2PRoQgkxwlibdGXKz1S.jpg'
   },
   {
     id: 'avengers-endgame',
@@ -50,7 +53,8 @@ export const shows: Show[] = [
     streamingServices: ['disney-plus'],
     popularity: 10,
     imdbRating: 8.4,
-    description: 'The epic conclusion to the Marvel Cinematic Universe\'s Infinity Saga'
+    description: 'The epic conclusion to the Marvel Cinematic Universe\'s Infinity Saga',
+    imageUrl: 'https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg'
   },
 
   // HBO Max / Max Content
@@ -63,7 +67,8 @@ export const shows: Show[] = [
     streamingServices: ['hbo-max'],
     popularity: 9,
     imdbRating: 9.2,
-    description: 'Epic fantasy series about power struggles in Westeros'
+    description: 'Epic fantasy series about power struggles in Westeros',
+    imageUrl: 'https://image.tmdb.org/t/p/w500/7WUHnWGx5OO145IRxPDUkQSh4C7.jpg'
   },
   {
     id: 'succession',
@@ -87,7 +92,8 @@ export const shows: Show[] = [
     streamingServices: ['amazon-prime'],
     popularity: 9,
     imdbRating: 8.7,
-    description: 'A dark take on superheroes and corporate corruption'
+    description: 'A dark take on superheroes and corporate corruption',
+    imageUrl: 'https://image.tmdb.org/t/p/w500/stTEycfG9928HYGEISBFaG1ngjM.jpg'
   },
   {
     id: 'jack-ryan',

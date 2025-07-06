@@ -15,6 +15,7 @@ import { ComplianceMonitor } from './compliance';
 // API Configuration
 const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500'; // w500 for poster thumbnails
 
 // Rate limiting configuration
 const API_RATE_LIMIT = 1000; // 1 second between requests
@@ -84,6 +85,8 @@ interface TMDBSearchItem {
   vote_average: number;
   popularity: number;
   media_type?: string;
+  poster_path?: string;
+  backdrop_path?: string;
 }
 
 interface TMDBGenre {
@@ -221,7 +224,10 @@ export class TMDBApi {
         streamingServices,
         popularity: Math.round(item.popularity / 10), // Scale to 1-10
         imdbRating: item.vote_average,
-        description: item.overview || 'No description available.'
+        description: item.overview || 'No description available.',
+        posterPath: item.poster_path,
+        backdropPath: item.backdrop_path,
+        imageUrl: item.poster_path ? `${TMDB_IMAGE_BASE_URL}${item.poster_path}` : undefined
       };
     } catch (error) {
       console.error('Error converting TMDB item to show:', error);

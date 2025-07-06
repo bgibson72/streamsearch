@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ContentApi, areApisConfigured, API_ATTRIBUTION } from '../utils/api';
 import { Show } from '../types';
+import ShowCard from './ShowCard';
 
 interface ApiContentBrowserProps {
   onShowSelect: (show: Show) => void;
@@ -297,75 +298,16 @@ export default function ApiContentBrowser({
             {searchResults.length > 0 ? `Search Results (${searchResults.length})` : `Popular Content (${popularContent.length})`}
           </h3>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {displayContent.map((show) => {
               const isSelected = selectedShows.includes(show.id);
               return (
-                <div
+                <ShowCard
                   key={show.id}
-                  onClick={() => handleShowClick(show)}
-                  className={`card p-4 cursor-pointer transition-all hover:shadow-medium hover:-translate-y-1 ${
-                    isSelected
-                      ? 'ring-2 ring-primary bg-primary/5'
-                      : ''
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <h4 className="font-semibold text-foreground text-sm line-clamp-2 flex-1">
-                      {show.title}
-                    </h4>
-                    <div className="flex gap-2 ml-2 flex-shrink-0">
-                      <span className={`text-xs px-2 py-1 border rounded transition-colors ${
-                        show.type === 'movie' 
-                          ? 'border-primary text-primary bg-transparent'
-                          : 'border-secondary text-secondary bg-transparent'
-                      }`}>
-                        {show.type === 'movie' ? '🎬' : '📺'}
-                      </span>
-                      {show.year && (
-                        <span className="badge badge-secondary text-xs">
-                          {show.year}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="card bg-muted p-3 mb-3">
-                    <p className="text-muted-foreground text-xs line-clamp-2">
-                      {show.description}
-                    </p>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {show.genre.slice(0, 3).map((genre) => (
-                      <span
-                        key={genre}
-                        className="badge badge-secondary text-xs"
-                      >
-                        {genre}
-                      </span>
-                    ))}
-                    {show.genre.length > 3 && (
-                      <span className="text-muted-foreground text-xs px-1.5 py-0.5">
-                        +{show.genre.length - 3}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    {show.streamingServices.length > 0 && (
-                      <div className="text-xs w-full text-center px-2 py-1 border border-primary text-primary bg-transparent rounded">
-                        📺 {show.streamingServices.length} service{show.streamingServices.length !== 1 ? 's' : ''}
-                      </div>
-                    )}
-
-                    {show.imdbRating && (
-                      <div className="text-xs w-full text-center px-2 py-1 border border-warning text-warning bg-transparent rounded">
-                        ⭐ {show.imdbRating.toFixed(1)}/10
-                      </div>
-                    )}
-                  </div>
-                </div>
+                  show={show}
+                  isSelected={isSelected}
+                  onToggle={() => handleShowClick(show)}
+                />
               );
             })}
           </div>

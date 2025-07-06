@@ -24,6 +24,9 @@ export interface Show {
   popularity: number; // 1-10 scale
   imdbRating?: number;
   description: string;
+  posterPath?: string; // TMDB poster image path
+  backdropPath?: string; // TMDB backdrop image path
+  imageUrl?: string; // Full URL for poster image
 }
 
 export interface UserPreferences {

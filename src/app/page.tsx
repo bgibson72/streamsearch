@@ -8,6 +8,7 @@ import { areApisConfigured } from '../utils/api';
 import { UserPreferences, Recommendation, Show } from '../types';
 import ApiContentBrowser from '../components/ApiContentBrowser';
 import ErrorBoundary from '../components/ErrorBoundary';
+import ShowCard from '../components/ShowCard';
 
 const STORAGE_KEYS = {
   SELECTED_SHOWS: 'streamsearch_selected_shows',
@@ -272,37 +273,13 @@ export default function Home() {
                   {selectedShowsData.length > 0 ? (
                     <div className="space-y-2 max-h-60 overflow-y-auto">
                       {selectedShowsData.map((show) => (
-                        <div
+                        <ShowCard
                           key={show.id}
-                          className="card p-3"
-                        >
-                          <div className="flex justify-between items-center">
-                            <div className="flex-1">
-                              <div className="font-medium text-foreground text-sm">
-                                {show.title}
-                              </div>
-                              <div className="flex gap-2 mt-1">
-                                <span className={`badge text-xs ${
-                                  show.type === 'movie' 
-                                    ? 'badge-primary'
-                                    : 'badge-secondary'
-                                }`}>
-                                  {show.type === 'movie' ? '🎬 Movie' : '📺 TV'}
-                                </span>
-                                <span className="badge badge-secondary text-xs">
-                                  {show.genre[0]}
-                                </span>
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => handleShowToggle(show.id)}
-                              className="btn btn-destructive ml-2 px-2 py-1 text-sm"
-                              title="Remove from cart"
-                            >
-                              ×
-                            </button>
-                          </div>
-                        </div>
+                          show={show}
+                          onToggle={handleShowToggle}
+                          showRemoveButton={true}
+                          compact={true}
+                        />
                       ))}
                     </div>
                   ) : (
