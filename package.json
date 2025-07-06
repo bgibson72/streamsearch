@@ -13,10 +13,16 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@jridgewell/sourcemap-codec": "^1.5.4",
+    "@rollup/plugin-terser": "^0.4.4",
+    "glob": "^11.0.3",
+    "lru-cache": "^11.1.0",
     "next": "15.3.5",
     "next-pwa": "^5.6.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "workbox-background-sync": "^6.6.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -22,12 +22,7 @@ export default function ShowCard({
   const [imageError, setImageError] = useState(false);
   
   const handleImageError = () => {
-    console.log(`Image failed to load for ${show.title}:`, show.imageUrl);
     setImageError(true);
-  };
-
-  const handleImageLoad = () => {
-    console.log(`Image loaded successfully for ${show.title}:`, show.imageUrl);
   };
 
   const PlaceholderImage = () => (
@@ -55,9 +50,7 @@ export default function ShowCard({
               fill
               className="object-cover rounded border border-border"
               onError={handleImageError}
-              onLoad={handleImageLoad}
               sizes={compact ? "48px" : "64px"}
-              priority={false}
             />
           ) : (
             <PlaceholderImage />
