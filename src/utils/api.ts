@@ -432,7 +432,10 @@ export function areApisConfigured(): boolean {
   const isConfigured = Boolean(TMDB_API_KEY);
   console.log('API configuration check:', { 
     TMDB_API_KEY: TMDB_API_KEY ? 'Set' : 'Not set',
-    isConfigured 
+    actualKey: TMDB_API_KEY ? `${TMDB_API_KEY.substring(0, 8)}...` : 'None',
+    isConfigured,
+    environment: process.env.NODE_ENV,
+    allEnvKeys: Object.keys(process.env).filter(key => key.includes('TMDB'))
   });
   return isConfigured;
 }

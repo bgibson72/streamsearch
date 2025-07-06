@@ -194,10 +194,14 @@ export default function ApiContentBrowser({
           <h4 className="font-semibold mb-3 text-foreground">Setup Instructions:</h4>
           <ol className="list-decimal list-inside space-y-1 text-muted-foreground text-sm">
             <li>Get a free TMDB API key at <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">themoviedb.org</a></li>
-            <li>Copy <code className="bg-background text-foreground px-2 py-1 rounded font-mono text-xs">.env.example</code> to <code className="bg-background text-foreground px-2 py-1 rounded font-mono text-xs">.env.local</code></li>
+            <li><strong>For local development:</strong> Copy <code className="bg-background text-foreground px-2 py-1 rounded font-mono text-xs">.env.example</code> to <code className="bg-background text-foreground px-2 py-1 rounded font-mono text-xs">.env.local</code></li>
             <li>Add your API key to the <code className="bg-background text-foreground px-2 py-1 rounded font-mono text-xs">NEXT_PUBLIC_TMDB_API_KEY</code> variable</li>
-            <li>Restart the development server</li>
+            <li><strong>For deployment:</strong> Set <code className="bg-background text-foreground px-2 py-1 rounded font-mono text-xs">NEXT_PUBLIC_TMDB_API_KEY</code> in your hosting environment (Vercel, Netlify, etc.)</li>
+            <li>Restart/redeploy the application</li>
           </ol>
+          <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded text-xs">
+            <strong>Note:</strong> The environment variable must be prefixed with <code>NEXT_PUBLIC_</code> to be available in the browser.
+          </div>
         </div>
       </div>
     );
