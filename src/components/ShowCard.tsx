@@ -87,21 +87,21 @@ export default function ShowCard({
                 
                 {/* Streaming Service Logos */}
                 {show.streamingServices.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-2 items-center">
                     {show.streamingServices.slice(0, 4).map(serviceId => {
                       const service = streamingServices.find(s => s.id === serviceId);
                       return service?.logo ? (
                         <div 
                           key={serviceId}
-                          className="w-4 h-4 flex-shrink-0 relative"
+                          className="w-8 h-8 flex-shrink-0 relative"
                           title={service.name}
                         >
                           <Image
                             src={service.logo}
                             alt={`${service.name} logo`}
                             fill
-                            className="object-contain"
-                            sizes="16px"
+                            className="object-contain rounded"
+                            sizes="32px"
                           />
                         </div>
                       ) : (

@@ -10,23 +10,23 @@
   "start_url": "/",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "/streamsearch-icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icon-256x256.png",
+      "src": "/streamsearch-icon.png",
       "sizes": "256x256",
       "type": "image/png"
     },
     {
-      "src": "/icon-384x384.png",
+      "src": "/streamsearch-icon.png",
       "sizes": "384x384",
       "type": "image/png"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/streamsearch-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
