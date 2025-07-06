@@ -1,6 +1,7 @@
 'use client';
 
 import { Show } from '../types';
+import { streamingServices } from '../data/streamingServices';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -84,10 +85,37 @@ export default function ShowCard({
                   </span>
                 )}
                 
+                {/* Streaming Service Logos */}
                 {show.streamingServices.length > 0 && (
-                  <span className="badge badge-success text-xs">
-                    {show.streamingServices.length} service{show.streamingServices.length !== 1 ? 's' : ''}
-                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {show.streamingServices.slice(0, 4).map(serviceId => {
+                      const service = streamingServices.find(s => s.id === serviceId);
+                      return service?.logo ? (
+                        <div 
+                          key={serviceId}
+                          className="w-4 h-4 flex-shrink-0 relative"
+                          title={service.name}
+                        >
+                          <Image
+                            src={service.logo}
+                            alt={`${service.name} logo`}
+                            fill
+                            className="object-contain"
+                            sizes="16px"
+                          />
+                        </div>
+                      ) : (
+                        <span key={serviceId} className="badge badge-success text-xs">
+                          {serviceId}
+                        </span>
+                      );
+                    })}
+                    {show.streamingServices.length > 4 && (
+                      <span className="badge badge-muted text-xs">
+                        +{show.streamingServices.length - 4} more
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
 
