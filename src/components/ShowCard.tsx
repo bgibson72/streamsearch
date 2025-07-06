@@ -93,7 +93,7 @@ export default function ShowCard({
                       return service?.logo ? (
                         <div 
                           key={serviceId}
-                          className="w-8 h-8 flex-shrink-0 relative"
+                          className="w-6 h-6 flex-shrink-0 relative"
                           title={service.name}
                         >
                           <Image
@@ -101,7 +101,7 @@ export default function ShowCard({
                             alt={`${service.name} logo`}
                             fill
                             className="object-contain rounded"
-                            sizes="32px"
+                            sizes="16px"
                           />
                         </div>
                       ) : (
