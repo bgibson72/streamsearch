@@ -199,19 +199,31 @@ We welcome contributions! Please see our [Contributing Guidelines](./CONTRIBUTIN
 - Jest for testing
 - Semantic commit messages
 
-## 📈 Roadmap
+## 📈 Roadmap & TODO
 
-### V1.1 (Next Release)
-- [ ] JustWatch API integration
-- [ ] Enhanced mobile experience
-- [ ] Streaming service price updates
-- [ ] User feedback system
+### 🚀 Launch Enhancement Features
+- [ ] **Export/Share Results** - "I saved $50/month!" social media sharing
+- [ ] **Price Alerts** - Notify users when streaming services change pricing
+- [ ] **Watchlist Integration** - Import existing watchlists from streaming services
+- [ ] **Family/Group Plans** - Factor in shared subscription costs
+- [ ] **Feedback System** - In-app user feedback and feature requests
+- [ ] **Usage Analytics** - Google Analytics for user behavior insights
+- [ ] **A/B Testing Setup** - Optimize conversion and user experience
 
-### V1.2 (Future)
-- [ ] Multi-language support
-- [ ] Advanced filtering options
-- [ ] Price trend analysis
-- [ ] Social sharing features
+### 🔮 Future Releases
+- [ ] **JustWatch API Integration** - Real-time streaming availability (99% accuracy)
+- [ ] **Enhanced Show Database** - Expand curated content library
+- [ ] **Advanced Filtering** - Genre, year, rating, and platform filters
+- [ ] **Price Trend Analysis** - Historical pricing data and predictions
+- [ ] **Recommendation Improvements** - Machine learning for better suggestions
+- [ ] **Multi-Device Sync** - Cloud-based user preferences (optional)
+
+### 🛠️ Technical Improvements
+- [ ] **Performance Optimization** - Virtual scrolling for large show lists
+- [ ] **Accessibility Audit** - WCAG 2.1 compliance improvements
+- [ ] **SEO Enhancement** - Blog content and landing page optimization
+- [ ] **Error Monitoring** - Sentry or similar error tracking integration
+- [ ] **API Rate Limiting** - Enhanced rate limiting and caching strategies
 
 ## 🐛 Known Issues
 
@@ -236,17 +248,41 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 - 💡 **Feature Requests**: [GitHub Discussions](https://github.com/bgibson72/streamsearch/discussions)
 - 📧 **Contact**: your.email@example.com
 
----
+## 🐛 Known Issues
 
-1. Create a feature branch
-2. Make your changes
-3. Test thoroughly
-4. Submit a pull request
+- Manual streaming availability assignments (will be resolved with JustWatch API)
+- Limited curated show library (expanding based on user feedback)
+- North America focused (by design)
+
+## 🤝 Contributing
+
+We welcome contributions! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📄 License
 
-This project is for educational and informational purposes. See API provider terms for usage restrictions.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **TMDB** for providing comprehensive movie/TV data
+- **JustWatch** for streaming availability information
+- **Next.js Team** for the amazing framework
+- **Vercel** for seamless deployment platform
+
+## 📞 Support
+
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/bgibson72/streamsearch/issues)
+- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/bgibson72/streamsearch/discussions)
+- 📧 **Contact**: Create an issue for questions
 
 ---
 
 **Built with ❤️ for cord-cutters and streaming enthusiasts**
+
+*Save money, watch more, stress less.* 🎬💰
