@@ -28,8 +28,8 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/StreamSearch.git
-   cd StreamSearch
+   git clone https://github.com/bgibson72/streamsearch.git
+   cd streamsearch
    ```
 
 2. **Install dependencies**
@@ -178,7 +178,7 @@ TMDB_API_KEY=your_api_key_here
 ```
 
 ### Deploy to Vercel
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/StreamSearch)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/bgibson72/streamsearch)
 
 ## 🤝 Contributing
 
@@ -231,8 +231,8 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ## 📞 Support
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/yourusername/StreamSearch/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/yourusername/StreamSearch/discussions)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/bgibson72/streamsearch/issues)
+- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/bgibson72/streamsearch/discussions)
 - 📧 **Contact**: your.email@example.com
 
 ---
