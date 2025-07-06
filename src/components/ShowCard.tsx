@@ -20,17 +20,14 @@ export default function ShowCard({
   compact = false 
 }: ShowCardProps) {
   const [imageError, setImageError] = useState(false);
-  const [imageLoading, setImageLoading] = useState(true);
   
   const handleImageError = () => {
     console.log(`Image failed to load for ${show.title}:`, show.imageUrl);
     setImageError(true);
-    setImageLoading(false);
   };
 
   const handleImageLoad = () => {
     console.log(`Image loaded successfully for ${show.title}:`, show.imageUrl);
-    setImageLoading(false);
   };
 
   const PlaceholderImage = () => (
