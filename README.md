@@ -237,15 +237,10 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ---
 
-<div align="center">
-  <strong>Made with ❤️ for cord-cutters everywhere</strong>
-  <br>
-  <sub>Save money, watch more, worry less</sub>
-</div>
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+1. Create a feature branch
+2. Make your changes
+3. Test thoroughly
+4. Submit a pull request
 
 ## 📄 License
 
