@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+:root {
+  /* StreamSearch Dark Mode Color Palette */
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --primary: #3b82f6;
+  --secondary: #6b7280;
+  --accent: #8b5cf6;
+  --muted: #1a1a1a;
+  --muted-foreground: #a1a1aa;
+  --border: #27272a;
+  --input: #18181b;
+  --card: #111111;
+  --card-foreground: #fafafa;
+  --destructive: #ef4444;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius: var(--radius);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+/* Modern utility classes */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  color: var(--card-foreground);
+}
+
+.card-enhanced {
+  background: linear-gradient(145deg, var(--card), #161616);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.4);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgb(59 130 246 / 0.4);
+}
+
+.btn-secondary {
+  background: var(--muted);
+  color: var(--foreground);
+}
+
+.btn-secondary:hover {
+  background: #262626;
+}
+
+.btn-destructive {
+  background: var(--destructive);
+  color: white;
+}
+
+.btn-destructive:hover {
+  background: #dc2626;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 20px rgb(59 130 246 / 0.3);
+}
+
+.input {
+  display: flex;
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--input);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: calc(var(--radius) - 2px);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: colors;
+}
+
+.badge-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.badge-secondary {
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.badge-success {
+  background: var(--success);
+  color: white;
+}
+
+.badge-warning {
+  background: var(--warning);
+  color: white;
+}
+
+.badge-destructive {
+  background: var(--destructive);
+  color: white;
+}
+
+/* Dark mode checkbox styling */
+input[type="checkbox"] {
+  accent-color: var(--primary);
+}
+
+/* Custom styling for better dark mode support */
+.checkbox-custom {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--border);
+  border-radius: 3px;
+  background: var(--input);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.checkbox-custom:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.checkbox-custom:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.checkbox-custom:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+}
+
+/* Scrollbar styling for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
