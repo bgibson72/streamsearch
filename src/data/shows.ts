@@ -234,5 +234,27 @@ export const shows: Show[] = [
     popularity: 9,
     imdbRating: 8.7,
     description: 'A ranching family fights to protect their land in Montana'
+  },
+  {
+    id: 'letterkenny',
+    title: 'Letterkenny',
+    genre: ['Comedy', 'Drama'],
+    year: 2016,
+    type: 'series',
+    streamingServices: ['crave'],
+    popularity: 8,
+    imdbRating: 8.6,
+    description: 'Canadian comedy series about life in rural Ontario'
+  },
+  {
+    id: 'schitts-creek',
+    title: "Schitt's Creek",
+    genre: ['Comedy', 'Drama'],
+    year: 2015,
+    type: 'series',
+    streamingServices: ['crave', 'netflix'],
+    popularity: 9,
+    imdbRating: 8.5,
+    description: 'A wealthy family suddenly finds themselves broke'
   }
 ];
