@@ -9,6 +9,7 @@ import { UserPreferences, Recommendation, Show } from '../types';
 import ApiContentBrowser from '../components/ApiContentBrowser';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ShowCard from '../components/ShowCard';
+import FeedbackForm from '../components/FeedbackForm';
 
 const STORAGE_KEYS = {
   SELECTED_SHOWS: 'streamsearch_selected_shows',
@@ -63,6 +64,7 @@ export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState<string>('all');
   const [optimizeForValue, setOptimizeForValue] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -494,6 +496,26 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {/* Floating Feedback Button */}
+      <button
+        onClick={() => setShowFeedbackForm(true)}
+        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-200 z-40 flex items-center gap-2"
+        title="Send Feedback"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.934 8.934 0 01-2.992-.508L7 21l1.508-3.008A8.934 8.934 0 010 12C0 7.582 3.582 4 8 4s8 3.582 8 8z" 
+          />
+        </svg>
+        <span className="hidden sm:inline">Feedback</span>
+      </button>
+
+      {/* Feedback Form Modal */}
+      <FeedbackForm 
+        isOpen={showFeedbackForm}
+        onClose={() => setShowFeedbackForm(false)}
+      />
     </div>
   );
 }

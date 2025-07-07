@@ -17,6 +17,7 @@
 - 💾 **Persistent Cart** - Your selections are saved locally for 7 days
 - 🌙 **Dark Mode** - Modern, accessible design with dark theme
 - ⚡ **Offline Ready** - Core functionality works without internet
+- 📝 **Built-in Feedback** - Easy feedback form with screenshot support
 
 ## 🚀 Quick Start
 
