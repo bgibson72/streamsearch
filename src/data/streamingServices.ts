@@ -103,5 +103,38 @@ export const streamingServices: StreamingService[] = [
     availability: ['Canada'],
     contentLibrarySize: 1500,
     features: ['HBO content', 'Canadian originals', 'French content', 'Live TV']
+  },
+  {
+    id: 'discovery-plus',
+    name: 'Discovery+',
+    monthlyPrice: 4.99,
+    yearlyPrice: 49.99,
+    description: 'Reality TV, documentaries, and lifestyle content',
+    logo: '/logos/discovery.png',
+    availability: ['US', 'Canada'],
+    contentLibrarySize: 2200,
+    features: ['Reality TV', 'Documentaries', 'HGTV/Food Network', 'True crime']
+  },
+  {
+    id: 'tubi',
+    name: 'Tubi',
+    monthlyPrice: 0,
+    yearlyPrice: 0,
+    description: 'Free ad-supported streaming with movies and TV shows',
+    logo: '/logos/tubi.png',
+    availability: ['US', 'Canada'],
+    contentLibrarySize: 4000,
+    features: ['Free with ads', 'Movies and TV', 'No subscription required', 'Original content']
+  },
+  {
+    id: 'pluto-tv',
+    name: 'Pluto TV',
+    monthlyPrice: 0,
+    yearlyPrice: 0,
+    description: 'Free live TV channels and on-demand content',
+    logo: '/logos/pluto.png',
+    availability: ['US', 'Canada'],
+    contentLibrarySize: 1000,
+    features: ['Free with ads', 'Live TV channels', '24/7 programming', 'Movies and shows']
   }
 ];

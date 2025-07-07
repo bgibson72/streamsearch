@@ -251,7 +251,8 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 ## 🐛 Known Issues
 
 - Manual streaming availability assignments (will be resolved with JustWatch API)
-- Limited curated show library (expanding based on user feedback)
+- ✅ ~~Limited curated show library~~ - **Expanded to 91+ shows across all services**
+- ✅ ~~Missing major streaming services~~ - **Added Discovery+, Tubi, Pluto TV**
 - North America focused (by design)
 
 ## 🤝 Contributing
