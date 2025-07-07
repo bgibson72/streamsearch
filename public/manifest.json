@@ -2,7 +2,7 @@
   "name": "StreamSearch - Find Your Perfect Streaming Combo",
   "short_name": "StreamSearch",
   "description": "Find the optimal streaming service combination for your favorite shows and movies. Save money by avoiding redundant subscriptions.",
-  "theme_color": "#06b6d4",
+  "theme_color": "#2563eb",
   "background_color": "#0f172a",
   "display": "standalone",
   "orientation": "portrait",
