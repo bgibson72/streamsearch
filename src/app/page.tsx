@@ -497,6 +497,40 @@ export default function Home() {
         )}
       </div>
 
+      {/* Always Free Footer */}
+      <footer className="mt-16 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <div className="max-w-4xl mx-auto px-6 py-8">
+          <div className="text-center space-y-4">
+            <div className="flex items-center justify-center gap-2 text-2xl font-bold text-gray-900 dark:text-white">
+              <span className="text-green-600">💚</span>
+              <span>Always Free, Always Private</span>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+              StreamSearch will always be completely free because we believe it would be hypocritical 
+              to charge for a service designed to save you money. We never collect personal data, 
+              require registration, or track your usage. Your privacy and savings are our priority.
+            </p>
+            <div className="flex items-center justify-center gap-6 text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex items-center gap-1">
+                <span className="text-green-500">✓</span>
+                <span>No Registration</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-green-500">✓</span>
+                <span>No Data Collection</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-green-500">✓</span>
+                <span>No Hidden Fees</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-400 dark:text-gray-500 pt-4 border-t border-gray-200 dark:border-gray-600">
+              Built with ❤️ for cord-cutters everywhere • Save money, watch more, stress less
+            </p>
+          </div>
+        </div>
+      </footer>
+
       {/* Floating Feedback Button */}
       <button
         onClick={() => setShowFeedbackForm(true)}
