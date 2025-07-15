@@ -65,7 +65,7 @@ export default function Home() {
   const [optimizeForValue, setOptimizeForValue] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Start collapsed
 
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -203,9 +203,9 @@ export default function Home() {
         </div>
 
         {!showRecommendations ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative">
-            {/* Show Selection */}
-            <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
+          <div className="relative">
+            {/* Main Content - always full width on mobile, responsive on desktop */}
+            <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:mr-0' : 'lg:mr-80'}`}>
               <div className="card p-6">
                 <h2 className="text-2xl font-semibold text-foreground mb-6">
                   Browse & Select Your Shows
@@ -246,54 +246,94 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Collapsible Preferences Panel */}
-            <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:col-span-0' : 'lg:col-span-1'} relative`}>
-              {/* Collapse/Expand Button */}
-              <button
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className={`fixed top-1/2 transform -translate-y-1/2 z-50 bg-slate-700 hover:bg-slate-600 text-white p-3 shadow-lg transition-all duration-300 ${
-                  sidebarCollapsed 
-                    ? 'right-4 rounded-full' 
-                    : 'right-4 lg:right-0 rounded-l-lg rounded-r-none'
-                }`}
-                title={sidebarCollapsed ? 'Expand shopping cart' : 'Collapse shopping cart'}
-              >
-                <svg 
-                  className={`w-5 h-5 transition-transform duration-300 ${sidebarCollapsed ? '' : 'rotate-180'}`} 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            {/* Mobile Shopping Cart Button - Fixed Bottom Right */}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className={`lg:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${
+                selectedShows.length > 0 ? 'scale-100' : 'scale-90 opacity-75'
+              }`}
+              title={sidebarCollapsed ? 'Open shopping cart' : 'Close shopping cart'}
+            >
+              <div className="relative">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 2.5M7 13l2.5 2.5m6 0L21 21H9l-1.5-1.5" />
                 </svg>
-              </button>
+                {selectedShows.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {selectedShows.length}
+                  </span>
+                )}
+              </div>
+            </button>
 
-              {/* Minimized Sidebar Indicator */}
-              {sidebarCollapsed && (
-                <div className="fixed right-4 top-1/2 transform -translate-y-1/2 mt-16 z-40 bg-slate-800 border border-slate-600 rounded-lg p-2 shadow-lg">
-                  <div className="text-center">
-                    <div className="text-2xl mb-1">🛒</div>
-                    <div className="text-xs text-white font-medium">
-                      {selectedShows.length}
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      {selectedShows.length === 1 ? 'show' : 'shows'}
-                    </div>
+            {/* Desktop Sidebar Toggle Button */}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className={`hidden lg:block fixed top-1/2 transform -translate-y-1/2 z-50 bg-slate-700 hover:bg-slate-600 text-white p-3 shadow-lg transition-all duration-300 ${
+                sidebarCollapsed 
+                  ? 'right-4 rounded-full' 
+                  : 'right-80 rounded-l-lg rounded-r-none'
+              }`}
+              title={sidebarCollapsed ? 'Expand shopping cart' : 'Collapse shopping cart'}
+            >
+              <svg 
+                className={`w-5 h-5 transition-transform duration-300 ${sidebarCollapsed ? '' : 'rotate-180'}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            {/* Minimized Desktop Sidebar Indicator */}
+            {sidebarCollapsed && (
+              <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 mt-16 z-40 bg-slate-800 border border-slate-600 rounded-lg p-2 shadow-lg">
+                <div className="text-center">
+                  <div className="text-2xl mb-1">🛒</div>
+                  <div className="text-xs text-white font-medium">
+                    {selectedShows.length}
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    {selectedShows.length === 1 ? 'show' : 'shows'}
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* Sidebar Content */}
-              <div className={`transition-all duration-300 overflow-hidden ${sidebarCollapsed ? 'w-0 opacity-0 pointer-events-none' : 'w-full opacity-100'}`}>
-                <div className="card p-6 sticky top-8">
+            {/* Mobile Overlay Background */}
+            {!sidebarCollapsed && (
+              <div 
+                className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+                onClick={() => setSidebarCollapsed(true)}
+              />
+            )}
+
+            {/* Shopping Cart Sidebar */}
+            <div className={`
+              fixed top-0 right-0 h-full w-full max-w-sm bg-slate-900 border-l border-slate-700 shadow-xl z-50 transform transition-transform duration-300 ease-in-out
+              lg:w-80 lg:max-w-none
+              ${sidebarCollapsed ? 'translate-x-full lg:translate-x-full' : 'translate-x-0 lg:translate-x-0'}
+            `}>
+              <div className="h-full overflow-y-auto">
+                <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-semibold text-foreground">
+                  <h2 className="text-xl font-semibold text-white">
                     Your Cart
                   </h2>
+                  {/* Mobile Close Button */}
+                  <button
+                    onClick={() => setSidebarCollapsed(true)}
+                    className="lg:hidden text-gray-400 hover:text-white p-1"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                   {selectedShows.length > 0 && (
                     <button
                       onClick={clearCart}
-                      className="btn btn-secondary px-3 py-1 text-sm"
+                      className="hidden lg:block btn btn-secondary px-3 py-1 text-sm"
                     >
                       Clear All
                     </button>
@@ -303,7 +343,7 @@ export default function Home() {
                 {/* Selected Shows Cart */}
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-3">
-                    <h3 className="font-medium text-foreground">
+                    <h3 className="font-medium text-white">
                       Selected Shows ({selectedShows.length})
                     </h3>
                   </div>
@@ -322,12 +362,12 @@ export default function Home() {
                       ))}
                     </div>
                   ) : (
-                    <div className="card bg-muted p-6 text-center">
+                    <div className="bg-slate-800 p-6 text-center rounded-lg border border-slate-700">
                       <div className="text-3xl mb-3">🛒</div>
-                      <p className="text-muted-foreground font-medium text-sm mb-1">
+                      <p className="text-gray-300 font-medium text-sm mb-1">
                         No shows selected yet
                       </p>
-                      <p className="text-muted-foreground text-xs">
+                      <p className="text-gray-400 text-xs">
                         Browse and click shows to add them
                       </p>
                     </div>
@@ -344,10 +384,10 @@ export default function Home() {
                       className="checkbox-custom"
                     />
                     <div>
-                      <div className="font-medium text-foreground text-sm">
+                      <div className="font-medium text-white text-sm">
                         💰 Maximize Value
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-xs text-gray-400">
                         Prioritize fewer services with maximum show coverage
                       </div>
                     </div>
@@ -356,7 +396,7 @@ export default function Home() {
 
                 {/* Budget */}
                 <div className="mb-4">
-                  <label className="block font-medium text-foreground mb-2 text-sm">
+                  <label className="block font-medium text-white mb-2 text-sm">
                     Monthly Budget (Optional)
                   </label>
                   <input
@@ -364,19 +404,19 @@ export default function Home() {
                     placeholder="e.g. 50"
                     value={maxBudget || ''}
                     onChange={(e) => setMaxBudget(e.target.value ? Number(e.target.value) : undefined)}
-                    className="input text-sm"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white text-sm focus:border-blue-500 focus:outline-none"
                   />
                 </div>
 
                 {/* Subscription Type */}
                 <div className="mb-6">
-                  <label className="block font-medium text-foreground mb-2 text-sm">
+                  <label className="block font-medium text-white mb-2 text-sm">
                     Subscription Preference
                   </label>
                   <select
                     value={subscriptionType}
                     onChange={(e) => setSubscriptionType(e.target.value as 'monthly' | 'yearly')}
-                    className="input text-sm"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded text-white text-sm focus:border-blue-500 focus:outline-none"
                   >
                     <option value="monthly">Monthly</option>
                     <option value="yearly">Yearly (Better Value)</option>
@@ -387,7 +427,7 @@ export default function Home() {
                 <button
                   onClick={handleGetRecommendations}
                   disabled={selectedShows.length === 0}
-                  className="w-full btn btn-primary py-3 px-4 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-3 px-4 rounded text-sm font-medium transition-colors"
                 >
                   {selectedShows.length === 0 
                     ? 'Add Shows to Get Started' 
@@ -399,7 +439,7 @@ export default function Home() {
                 <div className="mt-4">
                   <button
                     onClick={handleClearAllData}
-                    className="w-full btn btn-destructive py-3 px-4 text-sm"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded text-sm font-medium transition-colors"
                   >
                     Clear All Data
                   </button>
