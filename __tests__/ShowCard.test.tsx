@@ -27,7 +27,7 @@ const mockShow: Show = {
 
 describe('ShowCard Component', () => {
   it('renders show title and basic information', () => {
-    render(<ShowCard show={mockShow} />);
+    render(<ShowCard show={mockShow} isSelected={false} />);
     
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     expect(screen.getByText('2023 • Action, Adventure')).toBeInTheDocument();
@@ -37,14 +37,14 @@ describe('ShowCard Component', () => {
 
   it('shows placeholder when no image URL is provided', () => {
     const showWithoutImage = { ...mockShow, imageUrl: undefined };
-    render(<ShowCard show={showWithoutImage} />);
+    render(<ShowCard show={showWithoutImage} isSelected={false} />);
     
     expect(screen.getByText('🎬')).toBeInTheDocument();
     expect(screen.getByText('Movie')).toBeInTheDocument();
   });
 
   it('renders in compact mode', () => {
-    render(<ShowCard show={mockShow} compact={true} />);
+    render(<ShowCard show={mockShow} compact={true} isSelected={false} />);
     
     expect(screen.getByText('Test Movie')).toBeInTheDocument();
     // In compact mode, description should not be visible

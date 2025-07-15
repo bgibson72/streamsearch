@@ -128,7 +128,7 @@ export default function Home() {
     if (!allShows.find(s => s.id === show.id)) {
       setAllShows(prev => [...prev, show]);
     }
-    handleShowToggle(show.id);
+    handleShowToggle(String(show.id));
   };
 
   const clearCart = () => {
@@ -141,11 +141,9 @@ export default function Home() {
 
   const handleGetRecommendations = () => {
     const userPrefs: UserPreferences = {
-      selectedShows,
-      maxBudget,
-      preferredGenres: [],
-      subscriptionType,
-      optimizeForValue // Pass the value optimization preference
+      selectedShows: selectedShowsData,
+      budget: maxBudget || 100,
+      budgetType: subscriptionType
     };
 
     const recs = calculateRecommendations(userPrefs, streamingServices, allShows);
@@ -153,7 +151,7 @@ export default function Home() {
     setShowRecommendations(true);
   };
 
-  const selectedShowsData = allShows.filter(show => selectedShows.includes(show.id));
+  const selectedShowsData = allShows.filter(show => selectedShows.includes(String(show.id)));
   const isApiConfigured = areApisConfigured();
 
   // Clear all persisted data
@@ -316,7 +314,8 @@ export default function Home() {
                         <ShowCard
                           key={show.id}
                           show={show}
-                          onToggle={handleShowToggle}
+                          isSelected={true}
+                          onToggle={() => handleShowToggle(String(show.id))}
                           showRemoveButton={true}
                           compact={true}
                         />
@@ -446,7 +445,7 @@ export default function Home() {
                   <div
                     key={index}
                     className={`card p-6 ${
-                      optimizeForValue && rec.services.length <= 2 && rec.missedShows.length === 0
+                      optimizeForValue && rec.services.length <= 2 && rec.uncoveredShows.length === 0
                         ? 'ring-2 ring-success bg-success/5'
                         : ''
                     }`}
@@ -457,7 +456,7 @@ export default function Home() {
                           <h3 className="text-xl font-semibold text-foreground">
                             {rec.services.map(s => s.name).join(' + ')}
                           </h3>
-                          {optimizeForValue && rec.services.length <= 2 && rec.missedShows.length === 0 && (
+                          {optimizeForValue && rec.services.length <= 2 && rec.uncoveredShows.length === 0 && (
                             <span className="badge badge-success px-3 py-1">
                               💰 Best Value
                             </span>
@@ -465,15 +464,10 @@ export default function Home() {
                         </div>
                         <div className="flex items-center gap-4">
                           <span className="text-3xl font-bold text-primary">
-                            ${rec.totalMonthlyCost}/month
+                            ${rec.cost}/month
                           </span>
-                          {rec.totalYearlyCost && (
-                            <span className="text-lg text-muted-foreground font-medium">
-                              (${rec.totalYearlyCost}/year)
-                            </span>
-                          )}
                           <span className="badge badge-secondary px-3 py-1">
-                            Score: {rec.score}/100
+                            Coverage: {Math.round(rec.coverage * 100)}%
                           </span>
                         </div>
                       </div>
@@ -481,7 +475,9 @@ export default function Home() {
 
                     <div className="card bg-muted p-4 mb-4">
                       <p className="text-foreground font-medium">
-                        {rec.reasoning}
+                        This combination covers {rec.coveredShows.length} of your selected shows 
+                        {rec.uncoveredShows.length > 0 && ` (${rec.uncoveredShows.length} shows not available)`}.
+                        Efficiency score: {Math.round(rec.efficiency * 100)}/100
                       </p>
                     </div>
 
@@ -499,14 +495,14 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {rec.missedShows.length > 0 && (
+                      {rec.uncoveredShows.length > 0 && (
                         <div>
                           <h4 className="font-semibold text-foreground mb-3">
-                            Missed Shows ({rec.missedShows.length})
+                            Uncovered Shows ({rec.uncoveredShows.length})
                           </h4>
                           <div className="space-y-2">
-                            {rec.missedShows.map((show) => (
-                              <div key={show.id} className="badge badge-destructive px-3 py-2 w-full text-left">
+                            {rec.uncoveredShows.map((show: Show) => (
+                              <div key={String(show.id)} className="badge badge-destructive px-3 py-2 w-full text-left">
                                 ✗ {show.title}
                               </div>
                             ))}
@@ -515,13 +511,11 @@ export default function Home() {
                       )}
                     </div>
 
-                    {rec.savings > 0 && (
-                      <div className="card bg-success/10 border-success/20 p-4 mt-4">
-                        <p className="text-success font-semibold">
-                          💰 Potential savings: ${Math.round(rec.savings * 100) / 100}/month
-                        </p>
-                      </div>
-                    )}
+                    <div className="card bg-info/10 border-info/20 p-4 mt-4">
+                      <p className="text-info font-semibold">
+                        💡 Covers {rec.coveredShows.length} of your selected shows with {rec.efficiency.toFixed(2)} efficiency rating
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

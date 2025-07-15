@@ -13,7 +13,7 @@ export function calculateRecommendations(
   allShows: Show[]
 ): Recommendation[] {
   const selectedShows = allShows.filter(show => 
-    userPrefs.selectedShows.includes(show.id)
+    userPrefs.selectedShows.find(selectedShow => String(selectedShow.id) === String(show.id))
   );
 
   if (selectedShows.length === 0) {
@@ -25,13 +25,13 @@ export function calculateRecommendations(
   
   // Score each combination
   const recommendations = serviceCombinations.map(services => 
-    scoreServiceCombination(services, selectedShows, userPrefs)
+    scoreServiceCombination(services, selectedShows)
   );
 
-  // Filter by budget and sort by score
+  // Filter by budget and sort by efficiency
   return recommendations
-    .filter(rec => !userPrefs.maxBudget || rec.totalMonthlyCost <= userPrefs.maxBudget)
-    .sort((a, b) => b.score - a.score)
+    .filter(rec => !userPrefs.budget || rec.cost <= userPrefs.budget)
+    .sort((a, b) => b.efficiency - a.efficiency)
     .slice(0, 5); // Return top 5 recommendations
 }
 
@@ -75,8 +75,7 @@ function generateServiceCombinations(services: StreamingService[]): StreamingSer
  */
 function scoreServiceCombination(
   services: StreamingService[],
-  selectedShows: Show[],
-  userPrefs: UserPreferences
+  selectedShows: Show[]
 ): Recommendation {
   const serviceIds = services.map(s => s.id);
   
@@ -85,153 +84,27 @@ function scoreServiceCombination(
     show.streamingServices.some(serviceId => serviceIds.includes(serviceId))
   );
   
-  const missedShows = selectedShows.filter(show =>
+  const uncoveredShows = selectedShows.filter(show =>
     !show.streamingServices.some(serviceId => serviceIds.includes(serviceId))
   );
 
   // Calculate costs
-  const totalMonthlyCost = services.reduce((sum, service) => sum + service.monthlyPrice, 0);
-  const totalYearlyCost = userPrefs.subscriptionType === 'yearly' 
-    ? services.reduce((sum, service) => sum + (service.yearlyPrice || service.monthlyPrice * 12), 0)
-    : undefined;
+  const cost = services.reduce((sum, service) => sum + service.monthlyPrice, 0);
 
   // Calculate coverage percentage
-  const coveragePercentage = (coveredShows.length / selectedShows.length) * 100;
+  const coverage = selectedShows.length > 0 ? coveredShows.length / selectedShows.length : 0;
 
   // Calculate efficiency score (coverage per dollar)
-  const efficiency = coveragePercentage / totalMonthlyCost;
-
-  // Calculate savings compared to getting all services
-  const allServicesCost = services.length > 1 
-    ? calculatePotentialSavings(services, selectedShows)
-    : 0;
-
-  // Base score calculation with value optimization
-  let score = 0;
-  
-  if (userPrefs.optimizeForValue) {
-    // Value optimization: Prioritize fewer services with maximum coverage
-    
-    // Coverage weight (60% of score) - higher weight for value optimization
-    score += coveragePercentage * 0.6;
-    
-    // Service count penalty/bonus (25% of score)
-    const serviceCountScore = Math.max(0, 25 - (services.length - 1) * 8);
-    score += serviceCountScore;
-    
-    // Cost efficiency weight (15% of score)
-    score += Math.min(efficiency * 5, 15);
-    
-    // Big bonus for complete coverage with minimal services
-    if (missedShows.length === 0 && services.length <= 2) {
-      score += 25;
-    } else if (missedShows.length === 0) {
-      score += 15;
-    }
-    
-    // Extra penalty for too many services in value mode
-    if (services.length > 3) {
-      score -= 20;
-    }
-  } else {
-    // Standard optimization: Balance coverage, cost, and efficiency
-    
-    // Coverage weight (50% of score)
-    score += coveragePercentage * 0.5;
-    
-    // Cost efficiency weight (30% of score)
-    score += Math.min(efficiency * 10, 30);
-    
-    // Bonus for complete coverage (20% of score)
-    if (missedShows.length === 0) {
-      score += 20;
-    }
-    
-    // Penalty for too many services
-    if (services.length > 3) {
-      score -= 10;
-    }
-  }
-
-  // Budget compliance bonus (applies to both modes)
-  if (userPrefs.maxBudget && totalMonthlyCost <= userPrefs.maxBudget * 0.8) {
-    score += 5;
-  }
-
-  const reasoning = generateReasoning(services, coveredShows, missedShows, totalMonthlyCost, allServicesCost, userPrefs.optimizeForValue);
+  const efficiency = cost > 0 ? coverage / cost : 0;
 
   return {
     services,
-    totalMonthlyCost: Math.round(totalMonthlyCost * 100) / 100,
-    totalYearlyCost: totalYearlyCost ? Math.round(totalYearlyCost * 100) / 100 : undefined,
+    cost: Math.round(cost * 100) / 100,
+    coverage,
+    efficiency,
     coveredShows,
-    missedShows,
-    savings: allServicesCost,
-    reasoning,
-    score: Math.round(Math.min(score, 100) * 100) / 100 // Cap score at 100
+    uncoveredShows
   };
-}
-
-/**
- * Calculate potential savings compared to alternative approaches
- */
-function calculatePotentialSavings(
-  services: StreamingService[],
-  selectedShows: Show[]
-): number {
-  // This is a simplified calculation
-  // In reality, you'd compare against other viable combinations
-  const averageServiceCost = 12; // Average monthly cost
-  const potentialServices = selectedShows.reduce((acc, show) => {
-    show.streamingServices.forEach(serviceId => acc.add(serviceId));
-    return acc;
-  }, new Set()).size;
-
-  const worstCaseCost = potentialServices * averageServiceCost;
-  const actualCost = services.reduce((sum, service) => sum + service.monthlyPrice, 0);
-  
-  return Math.max(0, worstCaseCost - actualCost);
-}
-
-/**
- * Generate human-readable reasoning for the recommendation
- */
-function generateReasoning(
-  services: StreamingService[],
-  coveredShows: Show[],
-  missedShows: Show[],
-  totalCost: number,
-  savings: number,
-  optimizeForValue?: boolean
-): string {
-  const serviceNames = services.map(s => s.name).join(' + ');
-  
-  let reasoning = `${serviceNames} covers ${coveredShows.length} of your selected shows for $${totalCost}/month.`;
-  
-  if (missedShows.length === 0) {
-    reasoning += ' This combination provides complete coverage of all your shows.';
-    if (optimizeForValue && services.length <= 2) {
-      reasoning += ' 🎯 Maximum value achieved with minimal services!';
-    }
-  } else {
-    reasoning += ` You'll miss ${missedShows.length} show(s): ${missedShows.map(s => s.title).join(', ')}.`;
-  }
-  
-  if (savings > 0) {
-    reasoning += ` This saves you approximately $${Math.round(savings * 100) / 100}/month compared to other combinations.`;
-  }
-  
-  if (services.length === 1) {
-    reasoning += optimizeForValue 
-      ? ' 💰 Single service solution - ultimate value and simplicity!'
-      : ' Single service solution - simple and cost-effective.';
-  } else if (services.length === 2 && optimizeForValue) {
-    reasoning += ' 💪 Two-service combo delivers great bang for your buck.';
-  } else {
-    reasoning += ` Multi-service solution maximizes your content access.`;
-  }
-  
-  return reasoning;
 }
 
 /**
