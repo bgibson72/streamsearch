@@ -450,8 +450,9 @@ export default function Home() {
           </div>
         ) : (
           /* Recommendations View */
-          <div>
-            <div className="flex justify-between items-center mb-8">
+          <div className="pb-20 lg:pb-0">
+            {/* Desktop Header */}
+            <div className="hidden lg:flex justify-between items-center mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-foreground">
                   Your Recommendations
@@ -477,6 +478,43 @@ export default function Home() {
                   Back to Selection
                 </button>
               </div>
+            </div>
+
+            {/* Mobile Header - Simplified */}
+            <div className="lg:hidden mb-6">
+              <h2 className="text-2xl font-bold text-foreground text-center">
+                Your Recommendations
+              </h2>
+              {optimizeForValue && (
+                <div className="flex justify-center mt-3">
+                  <div className="badge badge-success px-3 py-1 text-sm">
+                    💰 Optimized for maximum value
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Floating Action Buttons */}
+            <div className="lg:hidden fixed bottom-6 left-4 right-4 z-50 flex gap-3">
+              <button
+                onClick={() => setShowRecommendations(false)}
+                className="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-lg flex items-center justify-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back
+              </button>
+              <button
+                onClick={handleClearAllData}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-lg flex items-center justify-center gap-2"
+                title="Clear all data"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Clear
+              </button>
             </div>
 
             {recommendations.length > 0 ? (
@@ -604,10 +642,14 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Floating Feedback Button */}
+      {/* Floating Feedback Button - Hide on mobile recommendations screen */}
       <button
         onClick={() => setShowFeedbackForm(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-200 z-40 flex items-center gap-2"
+        className={`fixed bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-200 z-40 flex items-center gap-2 ${
+          showRecommendations 
+            ? 'bottom-24 right-6 lg:bottom-6' // Higher on mobile when recommendations are shown
+            : 'bottom-6 right-6'
+        }`}
         title="Send Feedback"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
