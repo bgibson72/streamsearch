@@ -298,7 +298,7 @@ export default function ApiContentBrowser({
             {searchResults.length > 0 ? `Search Results (${searchResults.length})` : `Popular Content (${popularContent.length})`}
           </h3>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-3 sm:gap-4">
             {displayContent.map((show) => {
               const isSelected = selectedShows.includes(String(show.id));
               return (

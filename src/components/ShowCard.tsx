@@ -134,43 +134,44 @@ export default function ShowCard({
       onMouseLeave={() => setIsHovered(false)}
       style={{ overflow: 'visible' }}
     >
-      {/* Top bar with providers and cart button */}
-      {providers && providers.length > 0 && (
-        <div className="bg-slate-700 px-4 py-2 flex items-center justify-between relative rounded-t-lg" style={{ overflow: 'visible' }}>
-          <div className="flex items-center gap-1 flex-wrap relative">
-            {providers.length <= 3 ? (
-              // Show all providers if 3 or fewer
+      {/* Top bar with providers and cart button - ALWAYS SHOW for consistency */}
+      <div className="bg-slate-700 px-3 py-2 flex items-center justify-between relative rounded-t-lg" style={{ overflow: 'visible' }}>
+        <div className="flex items-center gap-1 flex-wrap relative min-h-[24px]">
+          {providers && providers.length > 0 ? (
+            // Show providers if available
+            providers.length <= 2 ? (
+              // Show all providers if 2 or fewer (mobile optimization)
               providers.map((provider, index) => (
                 <span 
                   key={index}
-                  className={`px-2 py-1 text-xs text-white rounded ${getProviderColor(provider)}`}
+                  className={`px-1.5 py-0.5 text-xs text-white rounded ${getProviderColor(provider)}`}
                 >
                   {provider}
                 </span>
               ))
             ) : (
-              // Show first 3 providers + expandable button if more than 3
+              // Show first 2 providers + expandable button if more than 2 (mobile optimization)
               <>
-                {providers.slice(0, 3).map((provider, index) => (
+                {providers.slice(0, 2).map((provider, index) => (
                   <span 
                     key={index}
-                    className={`px-2 py-1 text-xs text-white rounded ${getProviderColor(provider)}`}
+                    className={`px-1.5 py-0.5 text-xs text-white rounded ${getProviderColor(provider)}`}
                   >
                     {provider}
                   </span>
                 ))}
                 <div className="relative group">
-                  <button className="px-2 py-1 text-xs text-white rounded bg-gray-600 hover:bg-gray-500 cursor-pointer">
-                    +{providers.length - 3}
+                  <button className="px-1.5 py-0.5 text-xs text-white rounded bg-gray-600 hover:bg-gray-500 cursor-pointer">
+                    +{providers.length - 2}
                   </button>
-                  {/* Hover dropdown with all providers - high z-index to float above card */}
-                  <div className="absolute top-full left-0 mt-1 p-2 bg-slate-800 border border-slate-600 rounded shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-max max-w-sm z-[100]">
+                  {/* Hover dropdown with all providers - mobile optimized */}
+                  <div className="absolute top-full left-0 mt-1 p-2 bg-slate-800 border border-slate-600 rounded shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-max max-w-[280px] z-[100]">
                     <div className="text-xs text-gray-300 mb-1 font-medium">All providers:</div>
                     <div className="flex flex-wrap gap-1">
                       {providers.map((provider, index) => (
                         <span 
                           key={index}
-                          className={`px-2 py-1 text-xs text-white rounded ${getProviderColor(provider)}`}
+                          className={`px-1.5 py-0.5 text-xs text-white rounded ${getProviderColor(provider)}`}
                         >
                           {provider}
                         </span>
@@ -179,34 +180,37 @@ export default function ShowCard({
                   </div>
                 </div>
               </>
-            )}
-          </div>
-          <button
-            onClick={handleAddToCart}
-            className={`w-8 h-8 rounded flex items-center justify-center transition-all ml-3 cursor-pointer ${
-              isAddedToCart 
-                ? 'bg-green-600 hover:bg-green-700 text-white' 
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
-            title={isAddedToCart ? 'Added to cart' : 'Add to cart'}
-          >
-            {isAddedToCart ? (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 2.5M7 13l2.5 2.5m6 0L21 21H9l-1.5-1.5" />
-              </svg>
-            )}
-          </button>
+            )
+          ) : (
+            // Show placeholder when no providers available
+            <span className="text-xs text-gray-400 italic">Checking availability...</span>
+          )}
         </div>
-      )}
+        <button
+          onClick={handleAddToCart}
+          className={`w-7 h-7 rounded flex items-center justify-center transition-all ml-2 cursor-pointer flex-shrink-0 ${
+            isAddedToCart 
+              ? 'bg-green-600 hover:bg-green-700 text-white' 
+              : 'bg-blue-600 hover:bg-blue-700 text-white'
+          }`}
+          title={isAddedToCart ? 'Added to cart' : 'Add to cart'}
+        >
+          {isAddedToCart ? (
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 2.5M7 13l2.5 2.5m6 0L21 21H9l-1.5-1.5" />
+            </svg>
+          )}
+        </button>
+      </div>
       
-      {/* Main content area */}
-      <div className="flex p-4 rounded-b-lg overflow-hidden">
-        {/* Thumbnail on the left */}
-        <div className="w-24 h-36 flex-shrink-0 mr-4">
+      {/* Main content area - mobile optimized */}
+      <div className="flex p-3 sm:p-4 rounded-b-lg overflow-hidden">
+        {/* Thumbnail on the left - smaller on mobile */}
+        <div className="w-16 h-24 sm:w-20 sm:h-30 md:w-24 md:h-36 flex-shrink-0 mr-3">
           {posterUrl && (
             <Image
               src={posterUrl}
@@ -218,18 +222,18 @@ export default function ShowCard({
           )}
         </div>
         
-        {/* Content area */}
-        <div className="flex-1 text-white space-y-3">
-          {/* Title */}
-          <h3 className="text-lg font-bold">{show.title}</h3>
+        {/* Content area - mobile optimized */}
+        <div className="flex-1 text-white space-y-2 sm:space-y-3 min-w-0">
+          {/* Title - responsive font size */}
+          <h3 className="text-base sm:text-lg font-bold leading-tight">{show.title}</h3>
           
-          {/* Year, Rating, and Type Badge row */}
-          <div className="flex items-center gap-3 text-sm">
-            <span>{show.year}</span>
+          {/* Year, Rating, and Type Badge row - mobile optimized */}
+          <div className="flex items-center gap-2 text-xs sm:text-sm flex-wrap">
+            <span className="whitespace-nowrap">{show.year}</span>
             {rating && (
-              <span className="text-yellow-400">★ {typeof rating === 'number' ? rating.toFixed(1) : rating}</span>
+              <span className="text-yellow-400 whitespace-nowrap">★ {typeof rating === 'number' ? rating.toFixed(1) : rating}</span>
             )}
-            <span className={`px-2 py-1 text-xs rounded ${
+            <span className={`px-1.5 py-0.5 text-xs rounded whitespace-nowrap ${
               show.type === 'movie' ? 'bg-blue-600' : 'bg-green-600'
             }`}>
               {show.type === 'movie' ? (
@@ -240,7 +244,7 @@ export default function ShowCard({
             </span>
           </div>
           
-          {/* Genre and Content Rating badges */}
+          {/* Genre and Content Rating badges - mobile optimized */}
           <div className="flex flex-wrap gap-1">
             {/* Content Rating badge */}
             {show.contentRating && (
