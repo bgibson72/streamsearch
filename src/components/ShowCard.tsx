@@ -1,155 +1,288 @@
 'use client';
 
-import { Show } from '../types';
-import { streamingServices } from '../data/streamingServices';
-import Image from 'next/image';
 import { useState } from 'react';
+import Image from 'next/image';
+import { Show } from '../types';
 
 interface ShowCardProps {
   show: Show;
-  isSelected?: boolean;
-  onToggle?: (showId: string) => void;
+  isSelected: boolean;
+  onSelect?: (show: Show) => void;
+  onToggle?: () => void;
   showRemoveButton?: boolean;
   compact?: boolean;
 }
 
 export default function ShowCard({ 
   show, 
-  isSelected = false, 
+  isSelected, 
+  onSelect, 
   onToggle, 
-  showRemoveButton = false,
+  showRemoveButton = false, 
   compact = false 
 }: ShowCardProps) {
-  const [imageError, setImageError] = useState(false);
-  
-  const handleImageError = () => {
-    setImageError(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isAddedToCart, setIsAddedToCart] = useState(isSelected);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isAddedToCart) {
+      setIsAddedToCart(true);
+      if (onSelect) {
+        onSelect(show);
+      } else if (onToggle) {
+        onToggle();
+      }
+    }
   };
 
-  const PlaceholderImage = () => (
-    <div className="w-full h-full bg-muted flex items-center justify-center border border-border rounded">
-      <div className="text-center text-muted-foreground p-2">
-        <div className="text-2xl mb-1">
-          {show.type === 'movie' ? '🎬' : '📺'}
-        </div>
-        <div className="text-xs font-medium">
-          {show.type === 'movie' ? 'Movie' : 'TV Show'}
-        </div>
-      </div>
-    </div>
-  );
+  // Generate specific colors for provider badges
+  const getProviderColor = (provider: string) => {
+    const providerColors: { [key: string]: string } = {
+      // Major Subscription Services
+      'netflix': 'bg-red-600',
+      'amazon-prime': 'bg-sky-400',
+      'disney-plus': 'bg-blue-800',
+      'hbo-max': 'bg-blue-600',
+      'hulu': 'bg-green-600',
+      'apple-tv-plus': 'bg-black',
+      'paramount-plus': 'bg-sky-400',
+      'peacock': 'bg-black',
+      'showtime': 'bg-red-600',
+      'starz': 'bg-teal-600',
+      'discovery-plus': 'bg-orange-400',
+      'espn-plus': 'bg-black',
+      'funimation': 'bg-purple-600',
+      'crunchyroll': 'bg-orange-600',
+      'youtube-premium': 'bg-red-600',
+      'fubo': 'bg-cyan-500', // Using cyan for fubo since there's no specific "fubo" color
+      'crave': 'bg-sky-400',
+      
+      // Free Services
+      'tubi': 'bg-purple-600',
+      'pluto-tv': 'bg-yellow-500',
+      'tiktok': 'bg-gray-600',
+      'plex': 'bg-yellow-600', // Using yellow-600 for gold
+      
+      // Rental/Purchase Services
+      'apple-tv': 'bg-black',
+      'google-play': 'bg-yellow-500',
+      'microsoft-store': 'bg-blue-600',
+      'vudu': 'bg-blue-800',
+      'amazon-video': 'bg-sky-400',
+    };
+    
+    return providerColors[provider] || 'bg-gray-600'; // fallback color
+  };
 
-  return (
-    <div className={`card p-3 ${compact ? 'p-2' : ''} ${isSelected ? 'ring-2 ring-primary' : ''}`}>
-      <div className="flex gap-3">
-        {/* Thumbnail */}
-        <div className={`flex-shrink-0 ${compact ? 'w-12 h-16' : 'w-16 h-24'} relative`}>
-          {show.imageUrl && !imageError ? (
+  // Use posterPath if available, otherwise fallback to imageUrl
+  const posterUrl = show.posterPath 
+    ? `https://image.tmdb.org/t/p/w500${show.posterPath}`
+    : show.imageUrl;
+
+  // Get rating value (supporting both rating and imdbRating fields)
+  const rating = show.rating || show.imdbRating;
+
+  // Get genres (supporting both genre and genres fields)
+  const genres = show.genres || show.genre || [];
+
+  // Get providers (supporting both providers and streamingServices fields)
+  const providers = show.providers || show.streamingServices || [];
+
+  // Compact mode (for shopping cart)
+  if (compact) {
+    return (
+      <div className="flex items-center space-x-3 p-3 bg-slate-800 rounded-lg border border-slate-700">
+        <div className="w-12 h-18 flex-shrink-0">
+          {posterUrl && (
             <Image
-              src={show.imageUrl}
-              alt={`${show.title} poster`}
-              fill
-              className="object-cover rounded border border-border"
-              onError={handleImageError}
-              sizes={compact ? "48px" : "64px"}
+              src={posterUrl}
+              alt={show.title}
+              width={48}
+              height={72}
+              className="rounded object-contain w-full h-full"
             />
-          ) : (
-            <PlaceholderImage />
           )}
         </div>
-
-        {/* Content */}
         <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-start">
-            <div className="flex-1 min-w-0">
-              <h3 className={`font-medium text-foreground ${compact ? 'text-sm' : 'text-base'} truncate`}>
-                {show.title}
-              </h3>
-              <div className={`text-muted-foreground ${compact ? 'text-xs' : 'text-sm'} mb-2`}>
-                {show.year} • {show.genre.slice(0, 2).join(', ')}
-              </div>
-              
-              {/* Badges */}
-              <div className="flex flex-wrap gap-1 mb-2">
-                <span className={`badge text-xs ${
-                  show.type === 'movie' 
-                    ? 'badge-primary'
-                    : 'badge-secondary'
-                }`}>
-                  {show.type === 'movie' ? '🎬 Movie' : '📺 TV'}
+          <h3 className="text-sm font-semibold text-white truncate">{show.title}</h3>
+          <p className="text-xs text-gray-400">
+            {show.year} • {show.type === 'movie' ? 'Movie' : 'TV Show'}
+          </p>
+        </div>
+        {showRemoveButton && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onToggle) onToggle();
+            }}
+            className="text-red-400 hover:text-red-300 text-lg font-bold px-2 cursor-pointer"
+            title="Remove from selection"
+          >
+            ×
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  // Full card mode with Layout 7 design (providers in top bar, metadata below title)
+  return (
+    <div 
+      className="bg-slate-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow relative border border-slate-700"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ overflow: 'visible' }}
+    >
+      {/* Top bar with providers and cart button */}
+      {providers && providers.length > 0 && (
+        <div className="bg-slate-700 px-4 py-2 flex items-center justify-between relative rounded-t-lg" style={{ overflow: 'visible' }}>
+          <div className="flex items-center gap-1 flex-wrap relative">
+            {providers.length <= 3 ? (
+              // Show all providers if 3 or fewer
+              providers.map((provider, index) => (
+                <span 
+                  key={index}
+                  className={`px-2 py-1 text-xs text-white rounded ${getProviderColor(provider)}`}
+                >
+                  {provider}
                 </span>
-                
-                {show.imdbRating && (
-                  <span className="badge badge-accent text-xs">
-                    ⭐ {show.imdbRating.toFixed(1)}
+              ))
+            ) : (
+              // Show first 3 providers + expandable button if more than 3
+              <>
+                {providers.slice(0, 3).map((provider, index) => (
+                  <span 
+                    key={index}
+                    className={`px-2 py-1 text-xs text-white rounded ${getProviderColor(provider)}`}
+                  >
+                    {provider}
                   </span>
-                )}
-                
-                {/* Streaming Service Logos */}
-                {show.streamingServices.length > 0 && (
-                  <div className="flex flex-wrap gap-2 items-center">
-                    {show.streamingServices.slice(0, 4).map(serviceId => {
-                      const service = streamingServices.find(s => s.id === serviceId);
-                      return service?.logo ? (
-                        <div 
-                          key={serviceId}
-                          className="w-6 h-6 flex-shrink-0 relative"
-                          title={service.name}
+                ))}
+                <div className="relative group">
+                  <button className="px-2 py-1 text-xs text-white rounded bg-gray-600 hover:bg-gray-500 cursor-pointer">
+                    +{providers.length - 3}
+                  </button>
+                  {/* Hover dropdown with all providers - high z-index to float above card */}
+                  <div className="absolute top-full left-0 mt-1 p-2 bg-slate-800 border border-slate-600 rounded shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 min-w-max max-w-sm z-[100]">
+                    <div className="text-xs text-gray-300 mb-1 font-medium">All providers:</div>
+                    <div className="flex flex-wrap gap-1">
+                      {providers.map((provider, index) => (
+                        <span 
+                          key={index}
+                          className={`px-2 py-1 text-xs text-white rounded ${getProviderColor(provider)}`}
                         >
-                          <Image
-                            src={service.logo}
-                            alt={`${service.name} logo`}
-                            fill
-                            className="object-contain rounded"
-                            sizes="16px"
-                          />
-                        </div>
-                      ) : (
-                        <span key={serviceId} className="badge badge-success text-xs">
-                          {serviceId}
+                          {provider}
                         </span>
-                      );
-                    })}
-                    {show.streamingServices.length > 4 && (
-                      <span className="badge badge-muted text-xs">
-                        +{show.streamingServices.length - 4} more
-                      </span>
-                    )}
+                      ))}
+                    </div>
                   </div>
-                )}
-              </div>
-
-              {/* Description (non-compact only) */}
-              {!compact && (
-                <p className="text-muted-foreground text-xs line-clamp-2">
-                  {show.description}
-                </p>
-              )}
-            </div>
-
-            {/* Action Button */}
-            {onToggle && (
-              <button
-                onClick={() => onToggle(show.id)}
-                className={`ml-2 px-2 py-1 text-sm flex-shrink-0 ${
-                  showRemoveButton
-                    ? 'btn btn-destructive'
-                    : isSelected
-                    ? 'btn btn-secondary'
-                    : 'btn btn-primary'
-                }`}
-                title={
-                  showRemoveButton
-                    ? 'Remove from cart'
-                    : isSelected
-                    ? 'Remove from selection'
-                    : 'Add to cart'
-                }
-              >
-                {showRemoveButton ? '×' : isSelected ? '✓' : '+'}
-              </button>
+                </div>
+              </>
             )}
           </div>
+          <button
+            onClick={handleAddToCart}
+            className={`w-8 h-8 rounded flex items-center justify-center transition-all ml-3 cursor-pointer ${
+              isAddedToCart 
+                ? 'bg-green-600 hover:bg-green-700 text-white' 
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
+            title={isAddedToCart ? 'Added to cart' : 'Add to cart'}
+          >
+            {isAddedToCart ? (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 2.5M7 13l2.5 2.5m6 0L21 21H9l-1.5-1.5" />
+              </svg>
+            )}
+          </button>
+        </div>
+      )}
+      
+      {/* Main content area */}
+      <div className="flex p-4 rounded-b-lg overflow-hidden">
+        {/* Thumbnail on the left */}
+        <div className="w-24 h-36 flex-shrink-0 mr-4">
+          {posterUrl && (
+            <Image
+              src={posterUrl}
+              alt={show.title}
+              width={96}
+              height={144}
+              className="rounded object-contain w-full h-full border border-slate-600"
+            />
+          )}
+        </div>
+        
+        {/* Content area */}
+        <div className="flex-1 text-white space-y-3">
+          {/* Title */}
+          <h3 className="text-lg font-bold">{show.title}</h3>
+          
+          {/* Year, Rating, and Type Badge row */}
+          <div className="flex items-center gap-3 text-sm">
+            <span>{show.year}</span>
+            {rating && (
+              <span className="text-yellow-400">★ {typeof rating === 'number' ? rating.toFixed(1) : rating}</span>
+            )}
+            <span className={`px-2 py-1 text-xs rounded ${
+              show.type === 'movie' ? 'bg-blue-600' : 'bg-green-600'
+            }`}>
+              {show.type === 'movie' ? (
+                <>🎬 Movie</>
+              ) : (
+                <>📺 TV</>
+              )}
+            </span>
+          </div>
+          
+          {/* Genre and Content Rating badges */}
+          <div className="flex flex-wrap gap-1">
+            {/* Content Rating badge */}
+            {show.contentRating && (
+              <span className="px-2 py-1 text-xs font-medium bg-orange-600 text-white rounded">
+                {show.contentRating}
+              </span>
+            )}
+            
+            {/* Genre badges */}
+            {genres && genres.length > 0 && (
+              <>
+                {genres.slice(0, 3).map((genre, index) => (
+                  <span 
+                    key={index}
+                    className="px-2 py-1 text-xs bg-gray-600 text-white rounded"
+                  >
+                    {genre}
+                  </span>
+                ))}
+                {genres.length > 3 && (
+                  <span className="px-2 py-1 text-xs bg-gray-500 text-white rounded">
+                    +{genres.length - 3}
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+          
+          {/* Synopsis */}
+          {show.description && (
+            <p className={`text-sm text-gray-300 leading-relaxed ${
+              isHovered ? '' : 'line-clamp-3'
+            }`}>
+              {show.description.length > 150 ? `${show.description.substring(0, 150)}...` : show.description}
+            </p>
+          )}
+          
+          {!isHovered && show.description && show.description.length > 150 && (
+            <div className="text-xs text-gray-400 italic">
+              hover to read more...
+            </div>
+          )}
         </div>
       </div>
     </div>

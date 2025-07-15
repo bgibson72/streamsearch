@@ -242,48 +242,155 @@ export class TMDBApi {
  */
 export class JustWatchApi {
   private static providerMap: Map<number, string> = new Map([
+    // Major Subscription Services
     [8, 'netflix'],
+    [9, 'amazon-prime'],
     [337, 'disney-plus'],
     [384, 'hbo-max'],
-    [9, 'amazon-prime'],
     [15, 'hulu'],
     [350, 'apple-tv-plus'],
     [531, 'paramount-plus'],
     [387, 'peacock'],
-    [623, 'crave']
+    [37, 'showtime'],
+    [43, 'starz'],
+    [524, 'discovery-plus'],
+    [528, 'espn-plus'],
+    [283, 'funimation'],
+    [634, 'crunchyroll'],
+    [192, 'youtube-premium'],
+    [257, 'fubo'],
+    [623, 'crave'],
+    
+    // Free Services
+    [73, 'tubi'],
+    [300, 'pluto-tv'],
+    [613, 'tiktok'],
+    [538, 'plex'],
+    
+    // Rental/Purchase Services
+    [2, 'apple-tv'],
+    [386, 'google-play'],
+    [68, 'microsoft-store'],
+    [7, 'vudu'],
   ]);
 
   static async getStreamingServices(title: string, year: number): Promise<string[]> {
     try {
-      // Due to CORS restrictions, we'll implement fallback logic
-      // In a real implementation, you would use a backend proxy or official API
+      console.log(`Getting streaming services for: ${title} (${year})`);
       
-      // Simple heuristic based on show patterns (this is demo data)
+      // Call the real JustWatch API through our proxy endpoint
+      const response = await fetch('/api/justwatch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, year }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(`JustWatch API response for ${title}:`, data);
+        
+        if (data.providers && data.providers.length > 0) {
+          // Map JustWatch provider IDs to our internal service IDs and deduplicate
+          const mappedServices = data.providers
+            .map((provider: { provider_id: number }) => this.providerMap.get(provider.provider_id))
+            .filter((service: string | undefined): service is string => Boolean(service));
+          
+          console.log(`🔧 Before deduplication for ${title}:`, mappedServices);
+          
+          // Remove duplicates using Set
+          const uniqueServices = Array.from(new Set(mappedServices)) as string[];
+          
+          console.log(`✅ After deduplication for ${title}:`, uniqueServices);
+          return uniqueServices;
+        }
+      }
+
+      // If JustWatch API fails, use specific show mappings for better accuracy
       const titleLower = title.toLowerCase();
-      const services: string[] = [];
-      
-      // Add some realistic distribution based on content patterns
-      if (titleLower.includes('marvel') || titleLower.includes('star wars') || titleLower.includes('disney')) {
-        services.push('disney-plus');
+      const knownMappings: Record<string, string[]> = {
+        'new girl': ['hulu'],
+        'friends': ['hbo-max'],
+        'the office': ['peacock'],
+        'stranger things': ['netflix'],
+        'the mandalorian': ['disney-plus'],
+        'game of thrones': ['hbo-max'],
+        'succession': ['hbo-max'],
+        'the boys': ['amazon-prime'],
+        'handmaids tale': ['hulu'],
+        'brooklyn nine-nine': ['hulu', 'peacock'],
+        'parks and recreation': ['peacock'],
+        'arrested development': ['netflix'],
+        'house of cards': ['netflix'],
+        'orange is the new black': ['netflix'],
+        'the crown': ['netflix'],
+        'wandavision': ['disney-plus'],
+        'the falcon and the winter soldier': ['disney-plus'],
+        'loki': ['disney-plus'],
+        'euphoria': ['hbo-max'],
+        'westworld': ['hbo-max'],
+        'silicon valley': ['hbo-max'],
+        'veep': ['hbo-max'],
+        'barry': ['hbo-max'],
+        'chernobyl': ['hbo-max'],
+        'band of brothers': ['hbo-max'],
+        'the wire': ['hbo-max'],
+        'the sopranos': ['hbo-max'],
+        'sex and the city': ['hbo-max'],
+        'girls': ['hbo-max'],
+        'true detective': ['hbo-max'],
+        'the good place': ['netflix'],
+        'schitts creek': ['netflix'],
+        'ozark': ['netflix'],
+        'narcos': ['netflix'],
+        'mindhunter': ['netflix'],
+        'black mirror': ['netflix'],
+        'the witcher': ['netflix'],
+        'bridgerton': ['netflix'],
+        'squid game': ['netflix'],
+        'money heist': ['netflix'],
+        'dark': ['netflix'],
+        'queens gambit': ['netflix'],
+        'tiger king': ['netflix'],
+        'making a murderer': ['netflix'],
+        'fuller house': ['netflix'],
+        'bojack horseman': ['netflix'],
+        'big mouth': ['netflix'],
+        'disenchantment': ['netflix'],
+        'marvelous mrs maisel': ['amazon-prime'],
+        'the expanse': ['amazon-prime'],
+        'jack ryan': ['amazon-prime'],
+        'fleabag': ['amazon-prime'],
+        'the man in the high castle': ['amazon-prime'],
+        'transparent': ['amazon-prime'],
+        'bosch': ['amazon-prime'],
+        'upload': ['amazon-prime'],
+        'the tick': ['amazon-prime'],
+      };
+
+      // Check for exact match
+      const exactMatch = knownMappings[titleLower];
+      if (exactMatch) {
+        console.log(`Using known mapping for ${title}:`, exactMatch);
+        return exactMatch;
       }
-      if (titleLower.includes('game of thrones') || titleLower.includes('hbo') || titleLower.includes('succession')) {
-        services.push('hbo-max');
+
+      // Check for partial matches
+      for (const [knownTitle, services] of Object.entries(knownMappings)) {
+        if (titleLower.includes(knownTitle) || knownTitle.includes(titleLower)) {
+          console.log(`Using partial mapping for ${title}:`, services);
+          return services;
+        }
       }
-      if (titleLower.includes('stranger things') || titleLower.includes('netflix') || year >= 2020) {
-        services.push('netflix');
-      }
-      if (titleLower.includes('prime') || titleLower.includes('amazon') || Math.random() > 0.7) {
-        services.push('amazon-prime');
-      }
-      
-      // Add random distribution for other services
-      if (Math.random() > 0.8) services.push('hulu');
-      if (Math.random() > 0.9) services.push('apple-tv-plus');
-      
-      return services.length > 0 ? services : ['netflix']; // Default fallback
+
+      // If no mapping found, return empty array instead of defaulting to Netflix
+      console.log(`No streaming data found for ${title}, returning empty array`);
+      return [];
     } catch (error) {
       console.error('Error fetching JustWatch data:', error);
-      return ['netflix']; // Fallback
+      // Return empty array instead of defaulting to Netflix
+      return [];
     }
   }
 
@@ -313,14 +420,14 @@ export class ContentApi {
    */
   static async searchContent(query: string): Promise<Show[]> {
     try {
-      // Check cache first (client-side only)
+      // Check cache first (client-side only) - SHORT CACHE FOR TESTING
       if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(`search_${query}`);
         if (cached) {
           try {
             const { results, timestamp } = JSON.parse(cached);
-            // Return cached results if less than 1 hour old
-            if (Date.now() - timestamp < 3600000) {
+            // Return cached results if less than 30 seconds old (for testing)
+            if (Date.now() - timestamp < 30000) {
               console.log('Returning cached search results for:', query);
               return results;
             }
@@ -333,7 +440,7 @@ export class ContentApi {
       // Search TMDB first (more reliable)
       const tmdbResults = await TMDBApi.searchContent(query);
       
-      // Cache results to avoid repeated API calls (client-side only)
+      // Cache results to avoid repeated API calls (client-side only) - SHORT CACHE
       if (typeof window !== 'undefined') {
         localStorage.setItem(`search_${query}`, JSON.stringify({
           results: tmdbResults,
@@ -453,3 +560,5 @@ export const API_ATTRIBUTION = {
   tmdb: "This product uses the TMDB API but is not endorsed or certified by TMDB.",
   justwatch: "Streaming availability data provided by JustWatch."
 };
+
+

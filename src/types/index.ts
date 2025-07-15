@@ -1,56 +1,42 @@
-/**
- * Core types for the StreamSearch application
- */
+export interface Show {
+  id: number | string;
+  title: string;
+  description: string;
+  genre: string[];
+  genres?: string[];
+  year: number;
+  rating?: number;
+  imdbRating?: number;
+  contentRating?: string; // R, PG, PG-13, NR, TV-MA, etc.
+  providers?: string[];
+  streamingServices: string[];
+  imageUrl?: string;
+  posterPath?: string;
+  backdropPath?: string;
+  type: 'movie' | 'tv' | 'series';
+  popularity: number;
+}
 
 export interface StreamingService {
   id: string;
   name: string;
   monthlyPrice: number;
   yearlyPrice?: number;
-  description: string;
-  logo: string;
-  availability: string[];
-  contentLibrarySize: number;
-  features: string[];
-}
-
-export interface Show {
-  id: string;
-  title: string;
-  genre: string[];
-  year: number;
-  type: 'movie' | 'series';
-  streamingServices: string[]; // Array of service IDs
-  popularity: number; // 1-10 scale
-  imdbRating?: number;
-  description: string;
-  posterPath?: string; // TMDB poster image path
-  backdropPath?: string; // TMDB backdrop image path
-  imageUrl?: string; // Full URL for poster image
+  brandColor: string;
+  justWatchId?: number;
 }
 
 export interface UserPreferences {
-  selectedShows: string[]; // Array of show IDs
-  maxBudget?: number;
-  preferredGenres: string[];
-  subscriptionType: 'monthly' | 'yearly';
-  optimizeForValue?: boolean; // Prioritize fewer services with maximum coverage
+  budget: number;
+  budgetType: 'monthly' | 'yearly';
+  selectedShows: Show[];
 }
 
 export interface Recommendation {
   services: StreamingService[];
-  totalMonthlyCost: number;
-  totalYearlyCost?: number;
+  coverage: number;
+  cost: number;
+  efficiency: number;
   coveredShows: Show[];
-  missedShows: Show[];
-  savings: number;
-  reasoning: string;
-  score: number; // 1-100 optimization score
-}
-
-export interface SearchFilters {
-  genre?: string;
-  year?: number;
-  type?: 'movie' | 'series';
-  service?: string;
+  uncoveredShows: Show[];
 }

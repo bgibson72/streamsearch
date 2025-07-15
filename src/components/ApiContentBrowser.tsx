@@ -300,13 +300,13 @@ export default function ApiContentBrowser({
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {displayContent.map((show) => {
-              const isSelected = selectedShows.includes(show.id);
+              const isSelected = selectedShows.includes(String(show.id));
               return (
                 <ShowCard
                   key={show.id}
                   show={show}
                   isSelected={isSelected}
-                  onToggle={() => handleShowClick(show)}
+                  onSelect={() => handleShowClick(show)}
                 />
               );
             })}

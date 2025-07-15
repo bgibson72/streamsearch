@@ -65,6 +65,7 @@ export default function Home() {
   const [optimizeForValue, setOptimizeForValue] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -204,9 +205,9 @@ export default function Home() {
         </div>
 
         {!showRecommendations ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative">
             {/* Show Selection */}
-            <div className="lg:col-span-2">
+            <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:col-span-3' : 'lg:col-span-2'}`}>
               <div className="card p-6">
                 <h2 className="text-2xl font-semibold text-foreground mb-6">
                   Browse & Select Your Shows
@@ -247,9 +248,46 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Preferences Panel */}
-            <div className="lg:col-span-1">
-              <div className="card p-6 sticky top-8">
+            {/* Collapsible Preferences Panel */}
+            <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:col-span-0' : 'lg:col-span-1'} relative`}>
+              {/* Collapse/Expand Button */}
+              <button
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                className={`fixed top-1/2 transform -translate-y-1/2 z-50 bg-slate-700 hover:bg-slate-600 text-white p-3 shadow-lg transition-all duration-300 ${
+                  sidebarCollapsed 
+                    ? 'right-4 rounded-full' 
+                    : 'right-4 lg:right-0 rounded-l-lg rounded-r-none'
+                }`}
+                title={sidebarCollapsed ? 'Expand shopping cart' : 'Collapse shopping cart'}
+              >
+                <svg 
+                  className={`w-5 h-5 transition-transform duration-300 ${sidebarCollapsed ? '' : 'rotate-180'}`} 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Minimized Sidebar Indicator */}
+              {sidebarCollapsed && (
+                <div className="fixed right-4 top-1/2 transform -translate-y-1/2 mt-16 z-40 bg-slate-800 border border-slate-600 rounded-lg p-2 shadow-lg">
+                  <div className="text-center">
+                    <div className="text-2xl mb-1">🛒</div>
+                    <div className="text-xs text-white font-medium">
+                      {selectedShows.length}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      {selectedShows.length === 1 ? 'show' : 'shows'}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Sidebar Content */}
+              <div className={`transition-all duration-300 overflow-hidden ${sidebarCollapsed ? 'w-0 opacity-0 pointer-events-none' : 'w-full opacity-100'}`}>
+                <div className="card p-6 sticky top-8">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold text-foreground">
                     Your Cart
@@ -367,6 +405,7 @@ export default function Home() {
                     Clear All Data
                   </button>
                 </div>
+              </div>
               </div>
             </div>
           </div>
