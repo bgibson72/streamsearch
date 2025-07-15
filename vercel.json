@@ -1,12 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
   "framework": "nextjs",
-  "functions": {
-    "src/app/api/justwatch/route.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
+  "buildCommand": "npm run build",
   "env": {
     "NODE_ENV": "production"
   }
